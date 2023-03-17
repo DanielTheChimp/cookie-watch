@@ -1,5 +1,5 @@
 # Cookie Watch
-Third-Party Cookie Behavior Test Suite 
+Third-Party Cookie Test Suite 
 
 [Cookie Watch](https://cookie.danielp.xyz/) is a testbed for third-party cookies that I created for my master thesis in IT Security at the Ruhr University of Bochum. 
 
