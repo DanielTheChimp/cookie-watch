@@ -1,0 +1,27 @@
+version: "3.9"
+
+services:
+  cookie_watch:
+    build: ./cookie_watch
+    container_name: cookie_watch
+    command: python manage.py run -h 0.0.0.0 -p 5001
+    environment:
+      - FLASK_APP=src/init.py
+      - FLASK_DEBUG=1
+    ports:
+      - 5001:5001
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo
+    container_name: mongo_db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_DATABASE: watch
+      MONGODB_DATA_DIR: /usr/data/db
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./data/db:/usr/data/db

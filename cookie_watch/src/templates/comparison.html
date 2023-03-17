@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <div class="comp_item">
+        <div class="grid" style="margin-top: 50px">
+            <h1 >Comparison</h1>
+            <p></p>
+            {% if browser %}
+                <form action="/comparison/drop" method="post">
+                    <input class="secondary" type="submit" value="Reset" onclick="return confirm('Are you sure?')"/>
+                </form>
+                <form action="/comparison/to_latex" method="get" target="_blank">
+                    <input class="secondary" type="submit" value="To Latex"/>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+    <details class="comp_item" style="margin-bottom: 1em;">
+        <summary>Legend of Table</summary>
+        <table>
+            <tbody>
+                <tr>
+                    <td><div class="box green">+</div></td>
+                    <td>Cookie received</td>
+                </tr>
+                <tr>
+                    <td><div class="box red">-</div></td>
+                    <td>Cookie not received</td>
+                </tr>
+                <tr>
+                    <td><div class="box yellow"></div></td>
+                    <td>No Request</td>
+                </tr>
+                <tr>
+                    <td>D</td>
+                    <td>Set-Cookie: Default=1</td>
+                </tr>
+                <tr>
+                    <td>N</td>
+                    <td>Set-Cookie: SameSite_None=1; SameSite=None</td>
+                </tr>
+                <tr>
+                    <td>NS</td>
+                    <td>Set-Cookie: SameSite_None_Secure=1; SameSite=None;Secure</td>
+                </tr>
+                <tr>
+                    <td>L</td>
+                    <td>Set-Cookie: SameSite_Lax=1; SameSite=Lax</td>
+                </tr>
+                <tr>
+                    <td>S</td>
+                    <td>Set-Cookie: SameSite_Strict=1; SameSite=Strict</td>
+                </tr>
+            </tbody>
+        </table>
+    </details>
+    <div class="comp_item">
+        <figure>
+            <table id="comp" role="grid">
+                <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        {% for b in browser %}
+                            <th scope="col" colspan="5">{{ b[0] }} <br> {{ b[1] }}</th>
+                            <th scope="col"></th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        {% for b in browser %}
+                            <td></td>
+                            <td>D</td>
+                            <td>N</td>
+                            <td>NS</td>
+                            <td>L</td>
+                            <td>S</td>
+                        {% endfor %}
+                        <td></td>
+                    </tr>
+                    
+                    {% for name, results in tests.items() %}
+                        <tr class="result">
+                            <th scope="row"> {{ name }} </th>
+                            {% for t in results %}
+                                <td> {{ t[0] }} </td>
+                                <td> {{ t[1] }} </td>
+                                <td> {{ t[2] }} </td>
+                                <td> {{ t[3] }} </td>
+                                <td> {{ t[4] }} </td>
+                                <td></td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </figure>
+    </div>
+    <script>
+        // iterate cells and add color
+        let rows = document.getElementsByClassName("result");
+        for(let row of rows) {
+            let cells = row.getElementsByTagName("td");
+            counter = 5;
+            for(let cell of cells) {
+                if(!counter) {
+                    counter = 5;
+                    continue;
+                }
+
+                if(cell.innerText == '+') {
+                    cell.className = "green";
+                } else if(cell.innerText == '-') {
+                    cell.className = "red";
+                } else {
+                    cell.className = "yellow";
+                }
+
+                counter -= 1;
+            }
+        }
+    </script>
+{% endblock %}

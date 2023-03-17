@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <div class="container">
+        <div class="grid" style="margin-top: 50px">
+            <h1>Results</h1>
+            <p></p>
+            <form action="/results/drop" method="post">
+                <input id="res" class="secondary" type="submit" value="Reset"/>
+            </form>
+        </div>
+        {% if dump %}
+            <form action="/comparison" method="post">
+                <div class="grid">
+                    <select id="tag" name="tag">
+                        {% if dump and dump[0].browser == 'Chrome' %} 
+                            <option selected>Chrome Default</option>
+                            <option>Chrome Incognito</option>
+                            <option>Chrome Allow All</option>
+                            <option>Chrome Block Third-Party</option>
+                            <option>Chrome Block All</option>
+                        {% elif dump and dump[0].browser == 'Firefox' %}
+                            <option>Firefox Default</option>
+                            <option>Firefox Private</option>
+                            <option>Firefox Strict</option>
+                        {% elif dump and dump[0].browser == 'Safari' %}
+                            <option>Safari Default</option>
+                            <option>Safari Allow Tracking</option>
+                        {% endif %}
+                    </select>
+                    <button id="comp" type="submit">Add To Comparison</button>   
+                </div>
+            </form>
+        {% endif %}
+    </div>
+    <div class="container">
+        <table>
+            <thead>
+                <tr>
+                    <th scope="col">Datetime</th>
+                    <th scope="col">Browser</th>
+                    <th scope="col">Version</th>
+                    <th scope="col">Test</th>
+                    <th scope="col">Cookies</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for data in dump|reverse %}
+                    <tr>
+                        <th scope="row"> {{ data.time }} </th>
+                        <td> {{ data.browser }} </td>
+                        <td> {{ data.version }} </td>
+                        <td> {{ data.test }} </td>
+                        <td> {{ data.cookies }} </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    <script src="{{ url_for('static', filename='basics.js') }}"></script>
+    <script src="{{ url_for('static', filename='index.min.js') }}"></script>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 style="margin-bottom: 5px; margin-top: 50px">Cookie Watch</h1>
+        <div id="status" style="margin-bottom: 15px;" aria-busy="false"></div>
+        <div id="basics">
+            <h3 style="margin-bottom: 5px;">Basics</h3>
+            <fieldset>
+                <input type="checkbox" id="switch" name="switch" role="switch" onclick="toggle_mode()">
+                <label id="cookie_text" for="switch">
+                  Set cookies as first-party
+                </label>
+            </fieldset>
+            <div class="grid">
+                <button id="run_all" class="primary">Run All Tests</button>
+            </div>
+            <div class="grid">
+                <button id="setC" class="secondary" onclick="set_cookies()">Set Cookies</button>
+                <button id="unsetC" class="secondary" onclick="unset_cookies()">Remove Cookies</button>
+                <button class="secondary" onclick="window.open('/results', '_blank')">Results</button>
+                <button class="secondary" onclick="window.open('/comparison', '_blank')">Comparison</button>
+            </div>
+        </div>
+        <div id="domains">
+            <h3 style="margin-bottom: 5px;">Domains</h3>
+            <div class="grid">
+                <button class="secondary" onclick="window.location.href='https://cookie.danielp.xyz/';">Origin</button>
+                <button class="secondary" onclick="window.location.href='https://cookies.xsinator.com/';">2nd Origin</button>
+                <button class="secondary" onclick="window.location.href='https://cookie.danielp.work/';">Cross-Site</button>
+            </div>
+        </div>
+        <div>
+            <h3 style="margin-bottom: 5px;">Testcases</h3>
+            <div id="tests">
+            </div>
+        </div>
+    </div>
+{% endblock %}

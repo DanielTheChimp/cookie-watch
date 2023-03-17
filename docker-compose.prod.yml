@@ -1,0 +1,51 @@
+version: "3.9"
+
+services:
+  cookie_watch:
+    build: ./cookie_watch
+    container_name: cookie_watch
+    command: gunicorn --bind 0.0.0.0:5001 manage:app
+    environment:
+      - FLASK_APP=src/init.py
+      - FLASK_DEBUG=0
+      - MONGO_USER=${DB_USER}
+      - MONGO_PW=${DB_PASS}
+    volumes:
+      - ./services/web/:/usr/src/app/
+    expose:
+      - 5001
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo
+    container_name: mongo_db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DB_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_PASS}
+      MONGO_INITDB_DATABASE: watch
+      MONGODB_DATA_DIR: /usr/data/db
+    expose:
+      - 27017
+    volumes:
+      - ./data/db:/usr/data/db
+
+  nginx:
+    build: ./nginx
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /etc/letsencrypt/dhparam:/etc/letsencrypt/dhparam
+      - /etc/letsencrypt/live/danielp.xyz/fullchain.pem:/etc/letsencrypt/live/danielp.xyz/fullchain.pem
+      - /etc/letsencrypt/live/danielp.xyz/privkey.pem:/etc/letsencrypt/live/danielp.xyz/privkey.pem
+      - /etc/letsencrypt/live/danielp.xyz/chain.pem:/etc/letsencrypt/live/danielp.xyz/chain.pem
+      - /etc/letsencrypt/live/danielp.work/fullchain.pem:/etc/letsencrypt/live/danielp.work/fullchain.pem
+      - /etc/letsencrypt/live/danielp.work/privkey.pem:/etc/letsencrypt/live/danielp.work/privkey.pem
+      - /etc/letsencrypt/live/danielp.work/chain.pem:/etc/letsencrypt/live/danielp.work/chain.pem
+      - /etc/letsencrypt/live/cookies.xsinator.com/fullchain.pem:/etc/letsencrypt/live/cookies.xsinator.com/fullchain.pem
+      - /etc/letsencrypt/live/cookies.xsinator.com/privkey.pem:/etc/letsencrypt/live/cookies.xsinator.com/privkey.pem
+      - /etc/letsencrypt/live/cookies.xsinator.com/chain.pem:/etc/letsencrypt/live/cookies.xsinator.com/chain.pem
+
+    depends_on:
+      - cookie_watch
